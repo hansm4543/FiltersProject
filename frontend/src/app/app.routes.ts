@@ -1,21 +1,29 @@
 import { Routes } from '@angular/router';
 
-import {HomeComponent} from './home/home.component';
-import {AddFilterComponent} from './addFilter/addFilter.component';
+import { HomeComponent } from './home/home.component';
+import { AddFilterComponent } from './addFilter/addFilter.component';
+import { TestComponent } from './test/test.component';
 
-export const routes: Routes = [{
-    path: "",
+export const routes: Routes = [
+  {
+    path: '',
     component: HomeComponent,
-    title: "Home Page"
-},
-{
-    path: "addFilters",
+    title: 'Home Page',
+  },
+  {
+    path: 'addFilters',
     component: AddFilterComponent,
-    title: "Add Filters page"
-// },
-// {
-//     path: "add/:id",
-//     component: SecondComponent,
-//     title: "Add Filters page"
-// 
-}];
+    title: 'Add Filters page',
+  },
+  {
+    path: 'test',
+    component: TestComponent,
+    title: 'Add Filters page',
+    // },
+    // {
+    //     path: "add/:id",
+    //     component: SecondComponent,
+    //     title: "Add Filters page"
+    //
+  },
+];
