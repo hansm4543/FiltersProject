@@ -1,0 +1,39 @@
+{
+  "criterias": [
+    {
+      "id": 1,
+      "filterID": 1,
+      "criteria": "Amount",
+      "comparingCondition": "More",
+      "conditionValue": "4"
+    },
+    {
+      "id": 2,
+      "filterID": 1,
+      "criteria": "Title",
+      "comparingCondition": "Starts with",
+      "conditionValue": "LaLa"
+    },
+    {
+      "id": 3,
+      "filterID": 1,
+      "criteria": "Date",
+      "comparingCondition": "From",
+      "conditionValue": "25/05/2024"
+    },
+    {
+      "id": 4,
+      "filterID": 2,
+      "criteria": "Amount",
+      "comparingCondition": "More",
+      "conditionValue": "2"
+    },
+    {
+      "id": 5,
+      "filterID": 3,
+      "criteria": "Amount",
+      "comparingCondition": "Less",
+      "conditionValue": "3"
+    }
+  ]
+}

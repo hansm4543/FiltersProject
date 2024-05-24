@@ -1,0 +1,27 @@
+### Find ALl Filters
+GET http://localhost:8080/api/filters
+
+### Find Run By ID
+GET http://localhost:8080/api/filters/2
+
+
+### Create new Filter
+POST http://localhost:8080/api/filters
+Content-Type: application/json
+
+{
+  "id": 11,
+  "title": "FilterName"
+}
+
+### Update an existing Filter
+PUT http://localhost:8080/api/filters/11
+Content-Type: application/json
+
+{
+  "id": 11,
+  "title": "UPDATED TITLE"
+}
+
+### Delete a Filter
+DELETE http://localhost:8080/api/filters/11

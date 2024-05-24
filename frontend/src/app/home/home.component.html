@@ -1,0 +1,15 @@
+<ul>
+  @for( filter of dataMain; track filter.id){
+  <h1>{{ filter.id }}id--{{ filter.title }}</h1>
+
+  @for( criteria of data; track criteria.id){ @if (criteria.filterID ==
+  filter.id) {
+  <li>
+    <p>
+      {{ criteria.criteria }} {{ criteria.comparingCondition }}
+      {{ criteria.conditionValue }}
+    </p>
+  </li>
+
+  } }}
+</ul>
