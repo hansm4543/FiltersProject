@@ -6,7 +6,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/merger")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 class MergerController {
 
     private final JdbcMergerRepository mergerRepository;

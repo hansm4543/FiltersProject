@@ -1,49 +1,41 @@
+import { Component } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTable } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
-import { signal, computed } from '@angular/core';
+import { CdkTableModule } from '@angular/cdk/table';
+import { MatTableModule } from '@angular/material/table';
+import { DemoMaterialModule } from '../../material-module';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-
-export interface Comment {
-  postId: number;
-  id: number;
-  name: string;
-  email: string;
-  body: string;
-}
-
-async function logMovies() {
-  let json = {};
-  const response = await fetch('http://localhost:8080/api/filters', {
-    mode: 'cors',
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      json = data;
-    });
-  return json;
-}
+import { OnInit } from '@angular/core';
 
 @Component({
-  selector: 'homePage',
+  selector: 'home.component',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  styleUrls: ['home.component.css'],
+  imports: [
+    CommonModule,
+    CdkTableModule,
+    MatTableModule,
+    MatSort,
+    MatTable,
+    DemoMaterialModule,
+    HttpClientModule,
+  ],
+  templateUrl: 'home.component.html',
 })
 export class HomeComponent implements OnInit {
+  columnsToDisplay = ['id', 'title'];
+  innerDisplayedColumns = ['criteria', 'comparingCondition', 'conditionValue'];
+
   constructor(private http: HttpClient) {}
 
-  // httpClient = Inject(HttpClient);
   data: any = [];
   dataMain: any = [];
+
   ngOnInit(): void {
     this.fetchData();
     this.fetchDataMain();
   }
-
   fetchData() {
     this.http
       .get('http://localhost:8080/api/criteria')

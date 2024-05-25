@@ -1,1 +1,141 @@
 <p>second works!</p>
+
+<form class="example-form">
+  @for (optionike of FieldValuesOnFirstField; track optionike) {
+  <mat-form-field class="example-full-width">
+    <mat-label>Criteria</mat-label>
+    <input
+      type="text"
+      placeholder="Pick one"
+      aria-label="Number"
+      matInput
+      formControlName="Criteria"
+      [matAutocomplete]="autoCriteria"
+      (ngModelChange)="onInputChange('Criteria', $event)"
+      (change)="onInputChange('Criteria', $event)"
+    />
+    <mat-autocomplete #autoCriteria="matAutocomplete">
+      @for (option of optionsCriteria; track option) {
+      <mat-option [value]="option">{{ option }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width2">
+    <mat-label>Condition</mat-label>
+    <input
+      type="text"
+      placeholder="Pick one"
+      aria-label="Condition"
+      matInput
+      [formControl]="myControl1"
+      [matAutocomplete]="autoCondition"
+    />
+    <mat-autocomplete #autoCondition="matAutocomplete">
+      <!-- @if (criteria.filterID ==
+  filter.id) {
+    
+  } -->
+      @if (optionike == "Amount") { @for (selector of optionsCondition[0]; track
+      selector) {
+      <mat-option [value]="selector">{{ selector }}</mat-option>
+      } }@else if (optionike == "Title") { @for (selector of
+      optionsCondition[1]; track selector) {
+      <mat-option [value]="selector">{{ selector }}</mat-option
+      >}} @else { @for (selector of optionsCondition[2]; track selector) {
+      <mat-option [value]="selector">{{ selector }}</mat-option
+      >}}
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <!-- <mat-form-field class="example-full-width2">
+    <mat-label>Value</mat-label>
+    <input
+      type="text"
+      placeholder="Pick one"
+      aria-label="Value"
+      matInput
+      [formControl]="myControl2"
+      [matAutocomplete]="autoValue"
+    />
+    <mat-autocomplete #autoValue="matAutocomplete">
+      @for (option of optionsValue[0]; track option) {
+      <mat-option [value]="option">{{ option }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field> -->
+  }
+</form>
+
+<div>
+  <p>The count is: {{ count() }}</p>
+  <button (click)="increment()">+</button>
+  <button (click)="decrement()">-</button>
+</div>
+
+<form [formGroup]="contactForm" (ngSubmit)="submit()">
+  @for (optionike of FieldValuesOnFirstField; track optionike; let i = $index) {
+  <h2>{{ optionike }}</h2>
+  <h2>{{ i }}</h2>
+  <div>
+    <label for="criteria">Criteria:</label>
+    <select
+      name="criteria"
+      id="criteria"
+      (change)="onInputChange('select', $event)"
+    >
+      <option value="Amount">Amount</option>
+      <option value="Title">Title</option>
+      <option value="Date">Date</option>
+    </select>
+  </div>
+  <div>
+    <label for="condition">Condition:</label>
+    <select
+      name="condition"
+      id="condition"
+      (change)="onInputChange('select', $event)"
+    >
+      @if (optionike == "Amount") { @for (selector of optionsCondition[0]; track
+      selector) {
+      <option value="{{ selector }}">{{ selector }}</option>
+      } }@else if (optionike == "Title") { @for (selector of
+      optionsCondition[1]; track selector) {
+      <option value="{{ selector }}">{{ selector }}</option>
+      >}} @else { @for (selector of optionsCondition[2]; track selector) {
+      <option value="{{ selector }}">{{ selector }}</option>
+      >}}
+    </select>
+  </div>
+
+  <!-- <div>
+    <label for="name">Name:</label>
+    <input
+      id="name"
+      type="text"
+      formControlName="name"
+      (change)="onInputChange('name', $event)"
+    />
+  </div>
+  <div>
+    <label for="month">Month:</label>
+    <input
+      id="month"
+      type="month"
+      formControlName="month"
+      (change)="onInputChange('month', $event)"
+    />
+  </div>
+  <div>
+    <label for="number">Number:</label>
+    <input
+      id="number"
+      type="number"
+      formControlName="number"
+      (change)="onInputChange('number', $event)"
+    />
+  </div> -->
+  }
+
+  <button type="submit" [disabled]="!contactForm.valid">Submit</button>
+</form>

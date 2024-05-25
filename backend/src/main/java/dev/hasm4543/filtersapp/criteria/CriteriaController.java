@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/criteria")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 class CriteriaController {
 
     private final JdbcCriteriaRepository criteriaRepository;
