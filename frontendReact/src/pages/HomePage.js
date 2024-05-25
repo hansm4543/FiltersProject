@@ -132,26 +132,24 @@ export default function HomePage() {
   const myRows = [];
   dataMain.map((data) => myRows.push(createData(data.id, data.title)));
 
-  console.log("meme", myRows);
-
-  // return <div>{table}</div>;
-
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>ID</TableCell>
-            <TableCell align="right">TITLE</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {myRows.map((row) => (
-            <Row key={row.id} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div className="HomePage">
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>ID</TableCell>
+              <TableCell align="right">TITLE</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {myRows.map((row) => (
+              <Row key={row.id} row={row} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
