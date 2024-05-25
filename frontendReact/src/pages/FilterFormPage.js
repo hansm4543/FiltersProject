@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -16,10 +16,8 @@ import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
-import { DateTimeRangePicker } from "@mui/x-date-pickers-pro/DateTimeRangePicker";
+import FilterForm from "../components/FilterForm";
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   "label + &": {
@@ -217,27 +215,73 @@ const StyledButton = styled("button")(
 `
 );
 
-function FilterForm() {
+function FilterFormPage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [filterName, setFilterName] = useState("");
 
   const valuesMainList = ["Amount", "Title", "Date"];
   const valuesAmount = ["More", "Less"];
   const valuesTitle = ["Starts with", "Ends with"];
   const valuesDate = ["From", "To"];
 
+  const today = dayjs();
+  const yesterday = dayjs().subtract(1, "day");
+  const todayStartOfTheDay = today.startOf("day");
+
   const [DataInformation, setDataInformation] = useState([
     ["Amount", "More", 4],
   ]);
+  const useMemoMainValue = useMemo(() => {
+    return ["Amount"];
+  });
+  const useMemoSecondValue = useMemo(() => {
+    return ["More"];
+  });
+  const useMemoThirdValue = useMemo(() => {
+    return [4];
+  });
 
-  const handleChange = (event, index) => {
-    console.log(event);
-    console.log(event.target.value);
-    console.log(index);
+  // const handleMainValueChange = (event, val, index, valueIndex) => {
+  //   event.preventDefault();
+
+  //   if (valueIndex === 0) {
+  //     if (event.target.value === "Amount") {
+  //       newData[index] = [event.target.value, "More", "4"];
+  //     } else if (event.target.value === "Title") {
+  //       newData[index] = [event.target.value, "Starts with", "Ka"];
+  //     } else {
+  //       newData[index] = [
+  //         event.target.value,
+  //         "From",
+  //         "2024-05-24T13:52:47.000Z",
+  //       ];
+  //     }
+  //   }
+  //   return null;
+  // };
+
+  const handleChange = (event, val, index, valueIndex) => {
+    event.preventDefault();
     let newData = DataInformation;
 
-    newData[index][0] = event.target.value;
-    console.log("newData");
-    console.log(newData);
+    if (valueIndex === 0) {
+      if (event.target.value === "Amount") {
+        newData[index] = [event.target.value, "More", 4];
+      } else if (event.target.value === "Title") {
+        newData[index] = [event.target.value, "Starts with", "Ka"];
+      } else {
+        newData[index] = [
+          event.target.value,
+          "From",
+          "2024-05-24T13:52:47.000Z",
+        ];
+      }
+    } else if (valueIndex === 2 && newData[index][0] === "Amount") {
+      newData[index][valueIndex] = val;
+    } else {
+      newData[index][valueIndex] = event.target.value;
+    }
+
     setDataInformation(newData);
     setIsLoading(true);
   };
@@ -254,16 +298,53 @@ function FilterForm() {
     setDataInformation(updatedData);
   };
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   console.log("Filter Name:", filterName);
-  //   console.log("Criteria:", criteria);
-  //   console.log("Selection:", selection);
-  // };
+  const updateDate = (event, index) => {
+    console.log(dayjs(event).toString());
+    console.log(event);
+  };
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    console.log("Data:", DataInformation);
+    let x = Math.round(Math.random() * 100000000);
+    let newInformation = {
+      id: x,
+      title: filterName,
+    };
+
+    try {
+      fetch("http://localhost:8080/api/filters", {
+        method: "POST",
+        body: JSON.stringify(newInformation),
+        headers: { "Content-Type": "application/json" },
+      }).then((response) => console.log(response));
+    } catch (error) {
+      console.error(error);
+    }
+
+    DataInformation.forEach((element) => {
+      let newInformationCriteria = {
+        id: Math.round(Math.random() * 100000000),
+        filterID: x,
+        criteria: element[0],
+        comparingCondition: element[1],
+        conditionValue: element[2],
+      };
+      // console.log(newInformationCriteria);
+      try {
+        fetch("http://localhost:8080/api/criteria", {
+          method: "POST",
+          body: JSON.stringify(newInformationCriteria),
+          headers: { "Content-Type": "application/json" },
+        }).then((response) => console.log(response));
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }
 
   useEffect(() => {
     if (isLoading) {
-      // console.log(DataInformation);
       setIsLoading(false);
     }
   }, [DataInformation, isLoading]);
@@ -273,13 +354,12 @@ function FilterForm() {
   }
 
   const createSecondField = (value, index) => {
-    console.log(value);
     if (value[0] === "Amount") {
       return (
         <NativeSelect
           id={"condition" + index}
           value={value[1]}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e, undefined, index, 1)}
           input={<BootstrapInput />}
         >
           {valuesAmount.map((value) => (
@@ -292,7 +372,7 @@ function FilterForm() {
         <NativeSelect
           id={"condition" + index}
           value={value[1]}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e, undefined, index, 1)}
           input={<BootstrapInput />}
         >
           {valuesTitle.map((value) => (
@@ -305,7 +385,7 @@ function FilterForm() {
         <NativeSelect
           id={"condition" + index}
           value={value[1]}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e, undefined, index, 1)}
           input={<BootstrapInput />}
         >
           {valuesDate.map((value) => (
@@ -317,60 +397,72 @@ function FilterForm() {
   };
 
   const createThirdField = (value, index) => {
-    console.log(value);
     if (value[0] === "Amount") {
       return (
         <NumberInput
           aria-label={"Number" + index}
           placeholder="Type a number…"
           value={value[2]}
+          onChange={(e, val) => handleChange(e, val, index, 2)}
         />
       );
     } else if (value[0] === "Title") {
       return (
-        <TextField label="Size" id="outlined-size-normal" value={value[2]} />
+        <TextField
+          label="Size"
+          id="outlined-size-normal"
+          value={value[2]}
+          onChange={(e) => handleChange(e, undefined, index, 2)}
+        />
       );
     } else {
-      return <div></div>;
+      return (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={["DatePicker"]}>
+            <DemoItem label="DatePicker">
+              <DatePicker
+                value={dayjs(value[2])}
+                disablePast
+                onChange={(e) => updateDate(e, index, 2)}
+              />
+            </DemoItem>
+          </DemoContainer>
+        </LocalizationProvider>
+      );
     }
   };
+
+  console.log(DataInformation);
 
   return (
     <div className="filter-form">
       <form>
+        <TextField
+          label="Filter Name"
+          id="outlined-size-normal"
+          value={filterName}
+          onChange={(e) => setFilterName(e.target.value)}
+        />
         {DataInformation.map((value, index) => (
-          <div className="oneLine">
-            <FormControl sx={{ m: 1 }} variant="standard">
-              <InputLabel htmlFor={"criteria" + index}>Criteria</InputLabel>
-              <NativeSelect
-                id={"criteria" + index}
-                value={value[0]}
-                onChange={(e) => handleChange(e, index)}
-                input={<BootstrapInput />}
-              >
-                {valuesMainList.map((value) => (
-                  <option value={value}>{value}</option>
-                ))}
-              </NativeSelect>
-            </FormControl>
-            <FormControl sx={{ m: 1 }} variant="standard">
-              <InputLabel htmlFor={"condition" + index}>Condition</InputLabel>
-              {createSecondField(value, index)}
-            </FormControl>
-            <FormControl sx={{ m: 1 }} variant="standard">
-              {createThirdField(value, index)}
-            </FormControl>
-
-            <button onClick={(e) => removeRow(e, index)}>Remove Row</button>
-          </div>
+          <FilterForm
+            props={{
+              value,
+              index,
+              valuesMainList,
+              handleChange,
+              removeRow,
+              createSecondField,
+              createThirdField,
+            }}
+          ></FilterForm>
         ))}
-
         <button onClick={(e) => addRow(e)}>Add Row</button>
-
-        {/* <button type="submit">Save</button> */}
+        <button type="submit" onClick={(e) => handleSubmit(e)}>
+          Save
+        </button>
       </form>
     </div>
   );
 }
 
-export default FilterForm;
+export default FilterFormPage;

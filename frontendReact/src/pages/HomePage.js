@@ -26,6 +26,7 @@ export default function HomePage() {
         })
         .then((data) => {
           setDataMain(data);
+          console.log(data);
         })
         .catch((err) => console.log(err));
 
@@ -35,6 +36,7 @@ export default function HomePage() {
         })
         .then((data) => {
           setData(data);
+          console.log(data);
         })
         .catch((err) => console.log(err));
     }
