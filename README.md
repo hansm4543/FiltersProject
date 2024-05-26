@@ -37,6 +37,7 @@ View filters from UI and add filters to database
 
 ## What can be done next:
 
+- Refactor the code
 - Improve on design
   </br>
 - Try to Create frontend in Angular to get familiar with that language aswell
