@@ -10,6 +10,60 @@
 }
 
 .oneLine {
-  align-items: baseline;
+  align-items: end;
+  justify-content: center;
   display: flex;
+}
+
+.removeButton {
+  align-self: center;
+  margin-top: 20px;
+}
+.datePicker {
+  width: 215px;
+  height: 85px;
+}
+.textInput {
+  width: 180px;
+}
+
+.filterNameInput {
+  left: 44%;
+  position: relative;
+}
+@media (max-width: 850px) {
+  .filterNameInput {
+    left: 40%;
+    position: relative;
+  }
+}
+
+@media (max-width: 675px) {
+  .filterNameInput {
+    left: 35%;
+    position: relative;
+  }
+}
+.filter-form {
+  margin-top: 50px;
+}
+
+.bottomButtons {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 70px;
+}
+
+#addRowButton,
+#closeButton {
+  background-color: black;
+}
+
+#removeButton {
+  background-color: red;
+}
+.addRowButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
 }

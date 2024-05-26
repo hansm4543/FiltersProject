@@ -28,13 +28,13 @@ public class CriteriaJsonDataLoader implements CommandLineRunner {
         if(criteriaRepository.count() == 0) {
             try (InputStream inputStream = TypeReference.class.getResourceAsStream("/data/criteria.json")) {
                 Criterias allCriterias = objectMapper.readValue(inputStream, Criterias.class);
-                log.info("Reading {} runs from JSON data and saving to in-memory collection.", allCriterias.criterias().size());
+                log.info("Reading {} Criterias from JSON data and saving to in-memory collection.", allCriterias.criterias().size());
                 criteriaRepository.saveAll(allCriterias.criterias());
             } catch (IOException e) {
                 throw new RuntimeException("Failed to read JSON data", e);
             }
         } else {
-            log.info("Not loading Runs from JSON data because the collection contains data.");
+            log.info("Not loading Criterias from JSON data because the collection contains data.");
         }
     }
 

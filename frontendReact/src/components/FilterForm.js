@@ -8,6 +8,7 @@ import {
   Unstable_NumberInput as BaseNumberInput,
   numberInputClasses,
 } from "@mui/base/Unstable_NumberInput";
+import Button from "@mui/material/Button";
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   "label + &": {
@@ -229,9 +230,15 @@ function FilterForm({ props }) {
         {props.createThirdField(props.value, props.index)}
       </FormControl>
 
-      <button onClick={(e) => props.removeRow(e, props.index)}>
-        Remove Row
-      </button>
+      <div className="removeButton">
+        <Button
+          id="removeButton"
+          variant="contained"
+          onClick={(e) => props.removeRow(e, props.index)}
+        >
+          Remove Row
+        </Button>
+      </div>
     </div>
   );
 }

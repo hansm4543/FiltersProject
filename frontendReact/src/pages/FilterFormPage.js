@@ -1,9 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import NativeSelect from "@mui/material/NativeSelect";
 import InputBase from "@mui/material/InputBase";
 import TextField from "@mui/material/TextField";
@@ -16,8 +12,8 @@ import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import FilterForm from "../components/FilterForm";
+import Button from "@mui/material/Button";
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   "label + &": {
@@ -226,64 +222,56 @@ function FilterFormPage() {
 
   const today = dayjs();
   const yesterday = dayjs().subtract(1, "day");
+  // console.log(yesterday);
   const todayStartOfTheDay = today.startOf("day");
 
   const [DataInformation, setDataInformation] = useState([
     ["Amount", "More", 4],
   ]);
-  const useMemoMainValue = useMemo(() => {
-    return ["Amount"];
-  });
-  const useMemoSecondValue = useMemo(() => {
-    return ["More"];
-  });
-  const useMemoThirdValue = useMemo(() => {
-    return [4];
-  });
-
-  // const handleMainValueChange = (event, val, index, valueIndex) => {
-  //   event.preventDefault();
-
-  //   if (valueIndex === 0) {
-  //     if (event.target.value === "Amount") {
-  //       newData[index] = [event.target.value, "More", "4"];
-  //     } else if (event.target.value === "Title") {
-  //       newData[index] = [event.target.value, "Starts with", "Ka"];
-  //     } else {
-  //       newData[index] = [
-  //         event.target.value,
-  //         "From",
-  //         "2024-05-24T13:52:47.000Z",
-  //       ];
-  //     }
-  //   }
-  //   return null;
-  // };
 
   const handleChange = (event, val, index, valueIndex) => {
     event.preventDefault();
     let newData = DataInformation;
 
+    var result;
+
     if (valueIndex === 0) {
       if (event.target.value === "Amount") {
-        newData[index] = [event.target.value, "More", 4];
+        result = {
+          ...DataInformation,
+          [index]: [event.target.value, "More", 4],
+        };
       } else if (event.target.value === "Title") {
-        newData[index] = [event.target.value, "Starts with", "Ka"];
+        result = {
+          ...DataInformation,
+          [index]: [event.target.value, "Starts with", "Ka"],
+        };
       } else {
-        newData[index] = [
-          event.target.value,
-          "From",
-          "2024-05-24T13:52:47.000Z",
-        ];
+        result = {
+          ...DataInformation,
+          [index]: [event.target.value, "From", "2024-05-24T13:52:47.000Z"],
+        };
       }
     } else if (valueIndex === 2 && newData[index][0] === "Amount") {
-      newData[index][valueIndex] = val;
+      let array = DataInformation[index];
+      array[valueIndex] = val;
+      result = {
+        ...DataInformation,
+        [index]: array,
+      };
     } else {
-      newData[index][valueIndex] = event.target.value;
+      let array = DataInformation[index];
+      array[valueIndex] = event.target.value;
+      result = {
+        ...DataInformation,
+        [index]: array,
+      };
     }
-
-    setDataInformation(newData);
-    setIsLoading(true);
+    // console.log(result);
+    // console.log(Object.values(result));
+    setDataInformation(Object.values(result));
+    // setDataInformation(newData);
+    // setIsLoading(true);
   };
 
   const addRow = (event) => {
@@ -298,9 +286,19 @@ function FilterFormPage() {
     setDataInformation(updatedData);
   };
 
-  const updateDate = (event, index) => {
-    console.log(dayjs(event).toString());
-    console.log(event);
+  const updateDate = (event, index, valueIndex) => {
+    let test = dayjs(event).toString();
+    var date = new Date(test);
+    // console.log(date.toISOString());
+
+    let array = DataInformation[index];
+    array[valueIndex] = date.toISOString();
+    var result = {
+      ...DataInformation,
+      [index]: array,
+    };
+
+    setDataInformation(Object.values(result));
   };
 
   async function handleSubmit(event) {
@@ -408,26 +406,30 @@ function FilterFormPage() {
       );
     } else if (value[0] === "Title") {
       return (
-        <TextField
-          label="Size"
-          id="outlined-size-normal"
-          value={value[2]}
-          onChange={(e) => handleChange(e, undefined, index, 2)}
-        />
+        <div className="textInput">
+          <TextField
+            label="Title"
+            id="outlined-size-normal"
+            value={value[2]}
+            onChange={(e) => handleChange(e, undefined, index, 2)}
+          />
+        </div>
       );
     } else {
       return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={["DatePicker"]}>
-            <DemoItem label="DatePicker">
-              <DatePicker
-                value={dayjs(value[2])}
-                disablePast
-                onChange={(e) => updateDate(e, index, 2)}
-              />
-            </DemoItem>
-          </DemoContainer>
-        </LocalizationProvider>
+        <div className="datePicker">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={["DatePicker"]}>
+              <DemoItem label="DatePicker">
+                <DatePicker
+                  value={dayjs(value[2])}
+                  disablePast
+                  onChange={(e) => updateDate(e, index, 2)}
+                />
+              </DemoItem>
+            </DemoContainer>
+          </LocalizationProvider>
+        </div>
       );
     }
   };
@@ -437,12 +439,14 @@ function FilterFormPage() {
   return (
     <div className="filter-form">
       <form>
-        <TextField
-          label="Filter Name"
-          id="outlined-size-normal"
-          value={filterName}
-          onChange={(e) => setFilterName(e.target.value)}
-        />
+        <div className="filterNameInput">
+          <TextField
+            label="Filter Name"
+            id="outlined-size-normal"
+            value={filterName}
+            onChange={(e) => setFilterName(e.target.value)}
+          />
+        </div>
         {DataInformation.map((value, index) => (
           <FilterForm
             props={{
@@ -456,10 +460,28 @@ function FilterFormPage() {
             }}
           ></FilterForm>
         ))}
-        <button onClick={(e) => addRow(e)}>Add Row</button>
-        <button type="submit" onClick={(e) => handleSubmit(e)}>
-          Save
-        </button>
+        <div className="addRowButton">
+          <Button
+            variant="contained"
+            onClick={(e) => addRow(e)}
+            id="addRowButton"
+          >
+            Add Row
+          </Button>
+        </div>
+        <div className="bottomButtons">
+          <Button variant="contained" href="/" id="closeButton">
+            Close
+          </Button>
+          <Button
+            id="savebutton"
+            variant="contained"
+            type="submit"
+            onClick={(e) => handleSubmit(e)}
+          >
+            Save
+          </Button>
+        </div>
       </form>
     </div>
   );

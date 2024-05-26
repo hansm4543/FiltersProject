@@ -28,13 +28,13 @@ public class FilterJsonDataLoader implements CommandLineRunner {
         if(filterRepository.count() == 0) {
             try (InputStream inputStream = TypeReference.class.getResourceAsStream("/data/filters.json")) {
                 Filters allFilters = objectMapper.readValue(inputStream, Filters.class);
-                log.info("Reading {} runs from JSON data and saving to in-memory collection.", allFilters.filters().size());
+                log.info("Reading {} Filters from JSON data and saving to in-memory collection.", allFilters.filters().size());
                 filterRepository.saveAll(allFilters.filters());
             } catch (IOException e) {
                 throw new RuntimeException("Failed to read JSON data", e);
             }
         } else {
-            log.info("Not loading Runs from JSON data because the collection contains data.");
+            log.info("Not loading Filters from JSON data because the collection contains data.");
         }
     }
 
