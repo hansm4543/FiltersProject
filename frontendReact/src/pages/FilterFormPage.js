@@ -211,19 +211,24 @@ const StyledButton = styled("button")(
 `
 );
 
-function FilterFormPage() {
+function FilterFormPage({ props }) {
   const [isLoading, setIsLoading] = useState(true);
+
+  let propstoValue;
+  if (props === undefined) {
+    propstoValue = {
+      isModularEnabled: false,
+      setModularDisable: undefined,
+    };
+  } else {
+    propstoValue = props;
+  }
   const [filterName, setFilterName] = useState("");
 
   const valuesMainList = ["Amount", "Title", "Date"];
   const valuesAmount = ["More", "Less"];
   const valuesTitle = ["Starts with", "Ends with"];
   const valuesDate = ["From", "To"];
-
-  const today = dayjs();
-  const yesterday = dayjs().subtract(1, "day");
-  // console.log(yesterday);
-  const todayStartOfTheDay = today.startOf("day");
 
   const [DataInformation, setDataInformation] = useState([
     ["Amount", "More", 4],
@@ -267,11 +272,8 @@ function FilterFormPage() {
         [index]: array,
       };
     }
-    // console.log(result);
-    // console.log(Object.values(result));
+
     setDataInformation(Object.values(result));
-    // setDataInformation(newData);
-    // setIsLoading(true);
   };
 
   const addRow = (event) => {
@@ -289,8 +291,6 @@ function FilterFormPage() {
   const updateDate = (event, index, valueIndex) => {
     let test = dayjs(event).toString();
     var date = new Date(test);
-    // console.log(date.toISOString());
-
     let array = DataInformation[index];
     array[valueIndex] = date.toISOString();
     var result = {
@@ -303,7 +303,6 @@ function FilterFormPage() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    console.log("Data:", DataInformation);
     let x = Math.round(Math.random() * 100000000);
     let newInformation = {
       id: x,
@@ -328,7 +327,6 @@ function FilterFormPage() {
         comparingCondition: element[1],
         conditionValue: element[2],
       };
-      // console.log(newInformationCriteria);
       try {
         fetch("http://localhost:8080/api/criteria", {
           method: "POST",
@@ -434,55 +432,59 @@ function FilterFormPage() {
     }
   };
 
-  console.log(DataInformation);
-
   return (
-    <div className="filter-form">
-      <form>
-        <div className="filterNameInput">
-          <TextField
-            label="Filter Name"
-            id="outlined-size-normal"
-            value={filterName}
-            onChange={(e) => setFilterName(e.target.value)}
-          />
-        </div>
-        {DataInformation.map((value, index) => (
-          <FilterForm
-            props={{
-              value,
-              index,
-              valuesMainList,
-              handleChange,
-              removeRow,
-              createSecondField,
-              createThirdField,
-            }}
-          ></FilterForm>
-        ))}
-        <div className="addRowButton">
-          <Button
-            variant="contained"
-            onClick={(e) => addRow(e)}
-            id="addRowButton"
-          >
-            Add Row
-          </Button>
-        </div>
-        <div className="bottomButtons">
-          <Button variant="contained" href="/" id="closeButton">
-            Close
-          </Button>
-          <Button
-            id="savebutton"
-            variant="contained"
-            type="submit"
-            onClick={(e) => handleSubmit(e)}
-          >
-            Save
-          </Button>
-        </div>
-      </form>
+    <div className="aboveOthers">
+      <div className="filter-form">
+        <form>
+          <div className="filterNameInput">
+            <TextField
+              label="Filter Name"
+              id="outlined-size-normal"
+              value={filterName}
+              onChange={(e) => setFilterName(e.target.value)}
+            />
+          </div>
+          {DataInformation.map((value, index) => (
+            <FilterForm
+              props={{
+                value,
+                index,
+                valuesMainList,
+                handleChange,
+                removeRow,
+                createSecondField,
+                createThirdField,
+              }}
+            ></FilterForm>
+          ))}
+          <div className="addRowButton">
+            <Button
+              variant="contained"
+              onClick={(e) => addRow(e)}
+              id="addRowButton"
+            >
+              Add Row
+            </Button>
+          </div>
+          <div className="bottomButtons">
+            <Button variant="contained" href="/" id="closeButton">
+              Close
+            </Button>
+            <Button
+              id="savebutton"
+              variant="contained"
+              type="submit"
+              onClick={
+                propstoValue.isModularEnabled
+                  ? (e) => handleSubmit(e)
+                  : (e) => propstoValue.setModularDisable(e)
+              }
+            >
+              Save
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

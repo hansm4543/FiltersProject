@@ -5,7 +5,7 @@
 
 .HomePage {
   margin-left: 10%;
-  margin-top: 10%;
+  margin-top: 3%;
   width: 80%;
 }
 
@@ -55,7 +55,8 @@
 }
 
 #addRowButton,
-#closeButton {
+#closeButton,
+#addFilterPage {
   background-color: black;
 }
 
@@ -66,4 +67,37 @@
   display: flex;
   justify-content: center;
   margin-top: 30px;
+}
+
+.HomePageButtons {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 30px;
+}
+
+.aboveOthers {
+  border-radius: 10px;
+  border-color: rgb(193, 191, 195);
+  border-width: 5px;
+  border-style: solid;
+  background-color: rgb(157, 222, 231);
+  z-index: 1000;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 900px; /* Need a specific value to work */
+  height: 550px;
+  overflow-y: auto;
+  padding-bottom: 50px;
+  overflow-x: hidden;
+}
+
+.aboveOthers .filterNameInput {
+  left: 40%;
+}
+
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+  background-color: white;
 }

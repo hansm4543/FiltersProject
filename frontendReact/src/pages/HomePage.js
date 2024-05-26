@@ -12,9 +12,12 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Button from "@mui/material/Button";
+import FilterFormPage from "./FilterFormPage";
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isModularEnabled, setIsModularEnabled] = useState(false);
   const [dataMain, setDataMain] = useState([]);
   const [data, setData] = useState([]);
 
@@ -26,7 +29,6 @@ export default function HomePage() {
         })
         .then((data) => {
           setDataMain(data);
-          console.log(data);
         })
         .catch((err) => console.log(err));
 
@@ -36,7 +38,6 @@ export default function HomePage() {
         })
         .then((data) => {
           setData(data);
-          console.log(data);
         })
         .catch((err) => console.log(err));
     }
@@ -123,6 +124,15 @@ export default function HomePage() {
     );
   }
 
+  const setModularValue = (event) => {
+    event.preventDefault();
+    setIsModularEnabled(true);
+  };
+  const setModularDisable = (event) => {
+    event.preventDefault();
+    setIsModularEnabled(false);
+  };
+
   if (isLoading) {
     return (
       <div>
@@ -135,23 +145,37 @@ export default function HomePage() {
   dataMain.map((data) => myRows.push(createData(data.id, data.title)));
 
   return (
-    <div className="HomePage">
-      <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>ID</TableCell>
-              <TableCell align="right">TITLE</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {myRows.map((row) => (
-              <Row key={row.id} row={row} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <div>
+      {isModularEnabled ? (
+        <FilterFormPage props={{ isModularEnabled, setModularDisable }} />
+      ) : undefined}
+
+      <div className="HomePageButtons">
+        <Button variant="contained" href="/addFilter" id="addFilterPage">
+          Add Filter Page
+        </Button>
+        <Button variant="contained" onClick={(e) => setModularValue(e)}>
+          Add Filter Modular
+        </Button>
+      </div>
+      <div className="HomePage">
+        <TableContainer component={Paper}>
+          <Table aria-label="collapsible table">
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>ID</TableCell>
+                <TableCell align="right">TITLE</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {myRows.map((row) => (
+                <Row key={row.id} row={row} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </div>
   );
 }
