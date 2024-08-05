@@ -1,4 +1,4 @@
-# Building web applications with Java and React/Angular
+# Building web applications with Java and React
 
 ## Prerequisites
 
@@ -39,8 +39,6 @@ View filters from UI and add filters to database
 
 - Refactor the code
 - Improve on design
-  </br>
-- Try to Create frontend in Angular to get familiar with that language aswell
 
 </br>
 
